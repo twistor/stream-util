@@ -24,7 +24,8 @@ $stream = fopen('php://temp', 'w+b');
 
 fwrite($stream, 'asdfasfdas');
 
-$cloned = StreamUtil::copy($stream, false); // Passing in true (the default), will close the input stream.
+$cloned = StreamUtil::copy($stream, false); // Passing in true (the default),
+                                            // will close the input stream.
 
 $size = StreamUtil::getSize($stream); // == 10
 
