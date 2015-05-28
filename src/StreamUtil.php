@@ -62,7 +62,7 @@ class StreamUtil
     {
         $meta = stream_get_meta_data($stream);
 
-        return $meta['mode'][0] === 'a';
+        return static::modeIsAppendable($meta['mode']);
     }
 
     /**
@@ -76,7 +76,7 @@ class StreamUtil
     {
         $meta = stream_get_meta_data($stream);
 
-        return $meta['mode'][0] === 'r' || isset($meta['mode'][1]) && $meta['mode'][1] === '+';
+        return static::modeIsReadable($meta['mode']);
     }
 
     /**
@@ -106,11 +106,79 @@ class StreamUtil
     {
         $meta = stream_get_meta_data($stream);
 
-        if ($meta['mode'][0] === 'r') {
-            return isset($meta['mode'][1]) && $meta['mode'][1] === '+';
-        }
+        return static::modeIsWritable($meta['mode']);
+    }
 
-        return $meta['mode'][0] !== 'a';
+    /**
+     * Returns whether a mode is appendable.
+     *
+     * @param string $mode The mode string.
+     *
+     * @return bool True if appendable, false if not.
+     */
+    public static function modeIsAppendable($mode)
+    {
+        return $mode[0] === 'a';
+    }
+
+    /**
+     * Returns whether a mode is append only
+     *
+     * @param string $mode The mode string.
+     *
+     * @return bool True if append only, false if not.
+     */
+    public static function modeIsAppendOnly($mode)
+    {
+        return $mode[0] === 'a' && strpos($mode, '+') === false;
+    }
+
+    /**
+     * Returns whether a mode is readable.
+     *
+     * @param string $mode The mode string.
+     *
+     * @return bool True if readable, false if not.
+     */
+    public static function modeIsReadable($mode)
+    {
+        return $mode[0] === 'r' || strpos($mode, '+') !== false;
+    }
+
+    /**
+     * Returns whether a mode is read only.
+     *
+     * @param string $mode The mode string.
+     *
+     * @return bool True if read only, false if not.
+     */
+    public static function modeIsReadOnly($mode)
+    {
+        return $mode[0] === 'r' && strpos($mode, '+') === false;
+    }
+
+    /**
+     * Returns whether a mode is writable.
+     *
+     * @param string $mode The mode string.
+     *
+     * @return bool True if writable, false if not.
+     */
+    public static function modeIsWritable($mode)
+    {
+        return !static::modeIsReadOnly($mode) && !static::modeIsAppendable($mode);
+    }
+
+    /**
+     * Returns whether a mode is write only.
+     *
+     * @param string $mode The mode string.
+     *
+     * @return bool True if write only, false if not.
+     */
+    public static function modeIsWriteOnly($mode)
+    {
+        return static::modeIsWritable($mode) && !static::modeIsReadable($mode);
     }
 
     /**

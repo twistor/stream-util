@@ -101,4 +101,33 @@ class StreamUtilTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue(StreamUtil::trySeek($this->stream, 5));
         $this->assertSame(5, ftell($this->stream));
     }
+
+    public function testModeIsAppendOnly()
+    {
+        $this->assertTrue(StreamUtil::modeIsAppendOnly('a'));
+        $this->assertTrue(StreamUtil::modeIsAppendOnly('ab'));
+        $this->assertFalse(StreamUtil::modeIsAppendOnly('a+'));
+        $this->assertFalse(StreamUtil::modeIsAppendOnly('w'));
+        $this->assertFalse(StreamUtil::modeIsAppendOnly('r'));
+    }
+
+    public function testModeIsReadOnly()
+    {
+        $this->assertTrue(StreamUtil::modeIsReadOnly('r'));
+        $this->assertFalse(StreamUtil::modeIsReadOnly('r+'));
+        $this->assertFalse(StreamUtil::modeIsReadOnly('w'));
+        $this->assertFalse(StreamUtil::modeIsReadOnly('w+'));
+    }
+
+    public function testModeIsWriteOnly()
+    {
+        $this->assertTrue(StreamUtil::modeIsWriteOnly('w'));
+        $this->assertTrue(StreamUtil::modeIsWriteOnly('c'));
+        $this->assertTrue(StreamUtil::modeIsWriteOnly('x'));
+        $this->assertFalse(StreamUtil::modeIsWriteOnly('w+'));
+        $this->assertFalse(StreamUtil::modeIsWriteOnly('r'));
+        $this->assertFalse(StreamUtil::modeIsWriteOnly('r+'));
+        $this->assertFalse(StreamUtil::modeIsWriteOnly('w+'));
+        $this->assertFalse(StreamUtil::modeIsWriteOnly('c+'));
+    }
 }
