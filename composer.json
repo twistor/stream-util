@@ -1,0 +1,22 @@
+{
+    "name": "twistor/stream-util",
+    "type": "library",
+    "description": "Helper utilities for dealing with streams.",
+    "license": "MIT",
+    "homepage": "http://github.com/twistor/stream-util",
+    "authors": [
+        {
+            "name": "Chris Leppanen",
+            "email": "chris.leppanen@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "~4.1",
+        "phpspec/prophecy-phpunit": "~1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Twistor\\": "src/"
+        }
+    }
+}
