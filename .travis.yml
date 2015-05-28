@@ -10,19 +10,11 @@ php:
 
 sudo: false
 
-env:
-  - COMPOSER_OPTS=""
-  - COMPOSER_OPTS="--prefer-lowest"
-
-matrix:
-  fast_finish: true
-
 install:
   - travis_retry composer update $COMPOSER_OPTS
 
 script:
-  - if [ "$TRAVIS_PHP_VERSION" == "hhvm" ]; then vendor/bin/phpunit; fi
-  - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then vendor/bin/phpunit --coverage-text --coverage-clover coverage.xml; fi
+  - vendor/bin/phpunit --coverage-text --coverage-clover coverage.xml
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
