@@ -96,8 +96,6 @@ class StreamUtil
     /**
      * Returns whether the stream is writable.
      *
-     * This considers append mode as not writable, since seeking is undefined.
-     *
      * @param resource $stream The stream.
      *
      * @return bool True if writable, false if not.
@@ -166,7 +164,7 @@ class StreamUtil
      */
     public static function modeIsWritable($mode)
     {
-        return !static::modeIsReadOnly($mode) && !static::modeIsAppendable($mode);
+        return !static::modeIsReadOnly($mode);
     }
 
     /**

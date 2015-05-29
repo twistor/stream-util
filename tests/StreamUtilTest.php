@@ -77,9 +77,9 @@ class StreamUtilTest extends \PHPUnit_Framework_TestCase {
     {
         $this->assertTrue(StreamUtil::isWritable($this->stream));
 
-        $not_writable = fopen('data://text/plain,aaaaaaaaaa', 'a');
-        $this->assertFalse(StreamUtil::isWritable($not_writable));
-        fclose($not_writable);
+        $appendable = fopen('data://text/plain,aaaaaaaaaa', 'a');
+        $this->assertTrue(StreamUtil::isWritable($appendable));
+        fclose($appendable);
 
         $not_writable = fopen('data://text/plain,aaaaaaaaaa', 'r');
         $this->assertFalse(StreamUtil::isWritable($not_writable));
@@ -108,7 +108,7 @@ class StreamUtilTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue(StreamUtil::modeIsAppendOnly('ab'));
         $this->assertFalse(StreamUtil::modeIsAppendOnly('a+'));
         $this->assertFalse(StreamUtil::modeIsAppendOnly('w'));
-        $this->assertFalse(StreamUtil::modeIsAppendOnly('r'));
+        $this->assertFalse(StreamUtil::modeIsAppendOnly('rb'));
     }
 
     public function testModeIsReadOnly()
@@ -116,18 +116,20 @@ class StreamUtilTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue(StreamUtil::modeIsReadOnly('r'));
         $this->assertFalse(StreamUtil::modeIsReadOnly('r+'));
         $this->assertFalse(StreamUtil::modeIsReadOnly('w'));
-        $this->assertFalse(StreamUtil::modeIsReadOnly('w+'));
+        $this->assertFalse(StreamUtil::modeIsReadOnly('w+b'));
     }
 
     public function testModeIsWriteOnly()
     {
-        $this->assertTrue(StreamUtil::modeIsWriteOnly('w'));
+        $this->assertTrue(StreamUtil::modeIsWriteOnly('wb'));
         $this->assertTrue(StreamUtil::modeIsWriteOnly('c'));
-        $this->assertTrue(StreamUtil::modeIsWriteOnly('x'));
+        $this->assertTrue(StreamUtil::modeIsWriteOnly('xt'));
+        $this->assertTrue(StreamUtil::modeIsWriteOnly('a'));
         $this->assertFalse(StreamUtil::modeIsWriteOnly('w+'));
         $this->assertFalse(StreamUtil::modeIsWriteOnly('r'));
-        $this->assertFalse(StreamUtil::modeIsWriteOnly('r+'));
+        $this->assertFalse(StreamUtil::modeIsWriteOnly('r+b'));
         $this->assertFalse(StreamUtil::modeIsWriteOnly('w+'));
         $this->assertFalse(StreamUtil::modeIsWriteOnly('c+'));
+        $this->assertFalse(StreamUtil::modeIsWriteOnly('a+t'));
     }
 }
