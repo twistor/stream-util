@@ -37,6 +37,21 @@ class StreamUtilTest extends \PHPUnit_Framework_TestCase {
         $this->assertFalse(is_resource($this->stream));
     }
 
+    public function testGetUri()
+    {
+        $this->assertSame('data://text/plain,aaaaaaaaaa', StreamUtil::getUri($this->stream));
+    }
+
+    public function testGetUsuableUri()
+    {
+        $this->assertFalse(StreamUtil::getUsableUri($this->stream));
+
+        // A real file.
+        $handle = tmpfile();
+        $this->assertSame(StreamUtil::getUri($handle), StreamUtil::getUsableUri($handle));
+        fclose($handle);
+    }
+
     public function testGetSize()
     {
         // fstat() doesn't work for data streams in HHVM.

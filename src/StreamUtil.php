@@ -36,6 +36,34 @@ class StreamUtil
     }
 
     /**
+     * Returns the URI of a stream.
+     *
+     * @param resource $stream The stream.
+     *
+     * @return string The URI of the stream.
+     */
+    public static function getUri($stream)
+    {
+        $meta = stream_get_meta_data($stream);
+
+        return $meta['uri'];
+    }
+
+    /**
+     * Returns a URI that is usable via fopen().
+     *
+     * @param resource $stream The stream.
+     *
+     * @return string|false A usuable URI, or false on failure.
+     */
+    public static function getUsableUri($stream)
+    {
+        $uri = static::getUri($stream);
+
+        return file_exists($uri) ? $uri : false;
+    }
+
+    /**
      * Returns the size of a stream.
      *
      * If the size is 0, it could mean that the stream isn't reporting its size.
