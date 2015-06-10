@@ -36,17 +36,32 @@ class StreamUtil
     }
 
     /**
+     * Returns a key from stream_get_meta_data().
+     *
+     * @param resource $stream The stream.
+     * @param string   $key    The key to return.
+     *
+     * @return mixed The value from stream_get_meta_data().
+     *
+     * @see stream_get_meta_data()
+     */
+    public static function getMetaDataKey($stream, $key)
+    {
+        $meta = stream_get_meta_data($stream);
+
+        return isset($meta[$key]) ? $meta[$key] : null;
+    }
+
+    /**
      * Returns the URI of a stream.
      *
      * @param resource $stream The stream.
      *
-     * @return string The URI of the stream.
+     * @return string|null The URI of the stream, or null if not set.
      */
     public static function getUri($stream)
     {
-        $meta = stream_get_meta_data($stream);
-
-        return $meta['uri'];
+        return static::getMetaDataKey($stream, 'uri');
     }
 
     /**
@@ -58,9 +73,9 @@ class StreamUtil
      */
     public static function getUsableUri($stream)
     {
-        $uri = static::getUri($stream);
+        $uri = static::getMetaDataKey($stream, 'uri');
 
-        return file_exists($uri) ? $uri : false;
+        return isset($uri) && $uri !== '' && file_exists($uri) ? $uri : false;
     }
 
     /**
@@ -88,9 +103,7 @@ class StreamUtil
      */
     public static function isAppendable($stream)
     {
-        $meta = stream_get_meta_data($stream);
-
-        return static::modeIsAppendable($meta['mode']);
+        return static::modeIsAppendable(static::getMetaDataKey($stream, 'mode'));
     }
 
     /**
@@ -102,9 +115,7 @@ class StreamUtil
      */
     public static function isReadable($stream)
     {
-        $meta = stream_get_meta_data($stream);
-
-        return static::modeIsReadable($meta['mode']);
+        return static::modeIsReadable(static::getMetaDataKey($stream, 'mode'));
     }
 
     /**
@@ -116,9 +127,7 @@ class StreamUtil
      */
     public static function isSeekable($stream)
     {
-        $meta = stream_get_meta_data($stream);
-
-        return !empty($meta['seekable']);
+        return (bool) static::getMetaDataKey($stream, 'seekable');
     }
 
     /**
@@ -130,9 +139,7 @@ class StreamUtil
      */
     public static function isWritable($stream)
     {
-        $meta = stream_get_meta_data($stream);
-
-        return static::modeIsWritable($meta['mode']);
+        return static::modeIsWritable(static::getMetaDataKey($stream, 'mode'));
     }
 
     /**
