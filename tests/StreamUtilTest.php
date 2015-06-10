@@ -46,10 +46,20 @@ class StreamUtilTest extends \PHPUnit_Framework_TestCase {
     {
         $this->assertFalse(StreamUtil::getUsableUri($this->stream));
 
-        // A real file.
-        $handle = tmpfile();
-        $this->assertSame(StreamUtil::getUri($handle), StreamUtil::getUsableUri($handle));
+        // Test memory streams.
+        $handle = fopen('php://temp', 'w+b');
+        $this->assertFalse(StreamUtil::getUsableUri($this->stream));
         fclose($handle);
+
+
+        // A real file. We can't use tmpfile() since HHVM doesn't set the URI.
+        $file = tempnam(sys_get_temp_dir(), 'php-stream-util-');
+        $handle = fopen($file, 'w');
+
+        $this->assertSame(StreamUtil::getUri($handle), StreamUtil::getUsableUri($handle));
+
+        fclose($handle);
+        unlink($file);
     }
 
     public function testGetSize()
