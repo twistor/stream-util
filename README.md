@@ -37,17 +37,18 @@ StreamUtil::isSeekable($stream); // true
 
 StreamUtil::isWritable($stream); // true
 
-StreamUtil::tryRewind($stream); // true
+StreamUtil::tryRewind($stream);  // true
 
 StreamUtil::trySeek($stream, 0, SEEK_END); // true
 
+// Metadata helpers.
 StreamUtil::getMetaDataKey($stream, 'blocked') // false
 
 StreamUtil::getUri($stream); // php://temp
 
 StreamUtil::getUsuableUri($stream); // Returns a URI that can be used
-                                           // with fopen().
-                                           // false in this case.
+                                    // with fopen().
+                                    // false in this case.
 
 // Mode helpers.
 StreamUtil::modeIsAppendable('w+'); // false
