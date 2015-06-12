@@ -129,9 +129,6 @@ class StreamUtilTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(StreamUtil::trySeek($this->stream, 10));
         $this->assertSame(10, ftell($this->stream));
 
-        $this->assertFalse(StreamUtil::trySeek($this->stream, 100));
-        $this->assertFalse(ftell($this->stream));
-
         // Rewind.
         $this->assertTrue(StreamUtil::trySeek($this->stream, 0));
 
