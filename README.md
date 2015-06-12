@@ -27,17 +27,39 @@ fwrite($stream, 'asdfasfdas');
 $cloned = StreamUtil::copy($stream, false); // Passing in true (the default),
                                             // will close the input stream.
 
-$size = StreamUtil::getSize($stream); // == 10
+$size = StreamUtil::getSize($stream); // 10
 
-$appendable = StreamUtil::isAppendable($stream); // == false
+$appendable = StreamUtil::isAppendable($stream); // false
 
-$readable = StreamUtil::isReadable($stream); // == true
+$readable = StreamUtil::isReadable($stream); // true
 
-$seekable = StreamUtil::isSeekable($stream); // == true
+$seekable = StreamUtil::isSeekable($stream); // true
 
-$writable = StreamUtil::isWritable($stream); // == true
+$writable = StreamUtil::isWritable($stream); // true
 
-$success = StreamUtil::tryRewind($stream); // == true
+$success = StreamUtil::tryRewind($stream); // true
 
-$success = StreamUtil::trySeek($stream, 0, SEEK_END); // == true
+$success = StreamUtil::trySeek($stream, 0, SEEK_END); // true
+
+$blocked = StreamUtil::getMetaDataKey($stream, 'blocked') // false
+
+$uri = StreamUtil::getUri($stream); // php://temp
+
+$uri = StreamUtil::getUsuableUri($stream); // Returns a URI that can be used
+                                           // with fopen().
+                                           // false in this case.
+
+// Mode helpers.
+
+StreamUtil::modeIsAppendable('w+'); // false
+
+StreamUtil::modeIsAppendOnly('a+'); // false
+
+StreamUtil::modeIsReadable('w+');   // true
+
+StreamUtil::modeIsReadOnly('r');    // true
+
+StreamUtil::modeIsWritable('r+');   // true
+
+StreamUtil::modeIsWriteOnly('w');   // true
 ```
