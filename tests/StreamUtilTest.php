@@ -66,6 +66,8 @@ class StreamUtilTest extends \PHPUnit_Framework_TestCase {
     {
         // fstat() doesn't work for data streams in HHVM.
         $stream = fopen('php://temp', 'w+b');
+        $this->assertSame(0, StreamUtil::getSize($stream));
+
         fwrite($stream, 'aaaaaaaaaa');
         $this->assertSame(10, StreamUtil::getSize($stream));
         fclose($stream);
@@ -123,8 +125,20 @@ class StreamUtilTest extends \PHPUnit_Framework_TestCase {
 
     public function testTrySeek()
     {
-        $this->assertTrue(StreamUtil::trySeek($this->stream, 5));
-        $this->assertSame(5, ftell($this->stream));
+        $this->assertTrue(StreamUtil::trySeek($this->stream, 0));
+        $this->assertSame(0, ftell($this->stream));
+
+        $this->assertTrue(StreamUtil::trySeek($this->stream, 10));
+        $this->assertSame(10, ftell($this->stream));
+
+        $this->assertFalse(StreamUtil::trySeek($this->stream, 100));
+        $this->assertFalse(ftell($this->stream));
+
+        // Rewind.
+        $this->assertTrue(StreamUtil::trySeek($this->stream, 0));
+
+        $this->assertTrue(StreamUtil::trySeek($this->stream, 0, SEEK_END));
+        $this->assertSame(10, ftell($this->stream));
     }
 
     public function testModeIsAppendOnly()

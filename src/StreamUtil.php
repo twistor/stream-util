@@ -10,10 +10,10 @@ class StreamUtil
     /**
      * Copies a stream.
      *
-     * @param resource $stream The stream to clone.
+     * @param resource $stream The stream to copy.
      * @param bool     $close  Whether to close the input stream.
      *
-     * @return resource The cloned stream.
+     * @return resource The copied stream.
      */
     public static function copy($stream, $close = true)
     {
@@ -25,7 +25,6 @@ class StreamUtil
 
         if ($close) {
             fclose($stream);
-
         } else {
             static::trySeek($stream, $pos);
         }
@@ -155,7 +154,7 @@ class StreamUtil
     }
 
     /**
-     * Returns whether a mode is append only
+     * Returns whether a mode is append only.
      *
      * @param string $mode The mode string.
      *
@@ -241,6 +240,13 @@ class StreamUtil
      */
     public static function trySeek($stream, $offset, $whence = SEEK_SET)
     {
+        $offset = (int) $offset;
+
+        // If SEEK_SET, we can avoid a seek if we're at the right location.
+        if ($whence === SEEK_SET) {
+            return ftell($stream) === $offset || static::isSeekable($stream) && fseek($stream, $offset, $whence) === 0;
+        }
+
         return static::isSeekable($stream) && fseek($stream, $offset, $whence) === 0;
     }
 }
