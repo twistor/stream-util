@@ -4,8 +4,8 @@ namespace Twistor\Tests;
 
 use Twistor\StreamUtil;
 
-class StreamUtilTest extends \PHPUnit_Framework_TestCase {
-
+class StreamUtilTest extends \PHPUnit_Framework_TestCase
+{
     protected $stream;
 
     public function setUp()
@@ -51,7 +51,6 @@ class StreamUtilTest extends \PHPUnit_Framework_TestCase {
         $this->assertFalse(StreamUtil::getUsableUri($this->stream));
         fclose($handle);
 
-
         // A real file. We can't use tmpfile() since HHVM doesn't set the URI.
         $file = tempnam(sys_get_temp_dir(), 'php-stream-util-');
         $handle = fopen($file, 'w');
@@ -89,7 +88,6 @@ class StreamUtilTest extends \PHPUnit_Framework_TestCase {
         $readable = fopen('data://text/plain,aaaaaaaaaa', 'r');
         $this->assertTrue(StreamUtil::isReadable($readable));
         fclose($readable);
-
 
         $readable = fopen('data://text/plain,aaaaaaaaaa', 'w+');
         $this->assertTrue(StreamUtil::isReadable($readable));
