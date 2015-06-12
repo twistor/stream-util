@@ -243,8 +243,8 @@ class StreamUtil
         $offset = (int) $offset;
 
         // If SEEK_SET, we can avoid a seek if we're at the right location.
-        if ($whence === SEEK_SET) {
-            return ftell($stream) === $offset || static::isSeekable($stream) && fseek($stream, $offset, $whence) === 0;
+        if ($whence === SEEK_SET && ftell($stream) === $offset) {
+            return true;
         }
 
         return static::isSeekable($stream) && fseek($stream, $offset, $whence) === 0;
