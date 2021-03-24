@@ -84,13 +84,27 @@ class StreamUtil
      *
      * @param resource $stream The stream.
      *
-     * @return int The size of the stream.
+     * @return mixed int|false The size of the stream, or false if it cannot be retrieved.
      */
     public static function getSize($stream)
     {
-        $stat = fstat($stream);
+        $stat = stream_get_meta_data($stream);
 
-        return $stat['size'];
+        if ($stat['wrapper_type'] == 'plainfile') {
+            $stats = fstat($stream);
+            // $stats['size'] is not set, return false.
+            return is_array($stats) && isset($stats['size']) ? $stats['size'] : false;
+        }
+
+        if ($stat['wrapper_type'] == 'http') {
+            stream_context_set_default(array('http' => array('method' => 'HEAD')));
+            $head = array_change_key_case(get_headers($stat['uri'], 1));
+            // Lowercase "content-length: of download (in bytes), read from Content-Length: field.
+            // If not set, return false.
+            return isset($head['content-length']) ? $head['content-length'] : false;
+        }
+        // @todo:  Add logic for other wrapper types.
+        return false;
     }
 
     /**
