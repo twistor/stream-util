@@ -84,13 +84,16 @@ class StreamUtil
      *
      * @param resource $stream The stream.
      *
-     * @return int The size of the stream.
+     * @return int|null The size of the stream or NULL if it can't be retrieved.
      */
     public static function getSize($stream)
     {
         $stat = fstat($stream);
+        if ($stat === FALSE) {
+          return NULL;
+        }
 
-        return $stat['size'];
+        return isset($stat['size']) ? $stat['size'] : NULL;
     }
 
     /**
